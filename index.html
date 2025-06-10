@@ -19,12 +19,12 @@
       color: white;
       text-align: center;
     }
-    
+
     #intro {
       padding: 20px;
       z-index: 100;
     }
-    
+
     #hantu {
       position: fixed;
       top: 0;
@@ -36,7 +36,7 @@
       z-index: 99;
       animation: shake 0.2s infinite;
     }
-    
+
     @keyframes shake {
       0% { transform: translate(0, 0) rotate(0deg); }
       25% { transform: translate(5px, 5px) rotate(2deg); }
@@ -44,21 +44,21 @@
       75% { transform: translate(-5px, 5px) rotate(-2deg); }
       100% { transform: translate(0, 0) rotate(0deg); }
     }
-    
+
     .flicker {
       animation: flicker 0.1s infinite alternate;
     }
-    
+
     @keyframes flicker {
       0% { opacity: 1; }
       50% { opacity: 0.8; }
       100% { opacity: 1; }
     }
-    
+
     .glow {
       text-shadow: 0 0 10px red, 0 0 20px red;
     }
-    
+
     #unmuteBtn {
       position: fixed;
       bottom: 20px;
@@ -80,50 +80,40 @@
     <h1 class="glow">KLIK UNTUK CLAIM HADIAH 1 JUTA!</h1>
     <p>Klik dimana saja untuk melanjutkan...</p>
   </div>
-  
+
   <img id="hantu" src="https://files.catbox.moe/whihb5.jpeg" alt="HANTU">
-  
+
   <button id="unmuteBtn">KLIK UNTUK MEMUTAR SUARA</button>
-  
-  <audio id="scream" preload="auto">
+
+  <!-- Suara akan terus looping -->
+  <audio id="scream" preload="auto" loop>
     <source src="https://assets.mixkit.co/sfx/preview/mixkit-scary-horror-laugh-532.mp3" type="audio/mpeg">
     <source src="https://www.myinstants.com/media/sounds/scream.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    // Variabel global
     let audioAllowed = false;
     const scream = document.getElementById('scream');
     const unmuteBtn = document.getElementById('unmuteBtn');
-    
-    // Fungsi untuk meminta izin audio
+
     function enableAudio() {
       scream.volume = 1.0;
       scream.play().then(() => {
-        scream.pause();
-        scream.currentTime = 0;
         audioAllowed = true;
         unmuteBtn.style.display = 'none';
       }).catch(e => {
         unmuteBtn.style.display = 'block';
       });
     }
-    
-    // Fungsi utama
+
     function showGhost() {
       const ghost = document.getElementById('hantu');
       const intro = document.getElementById('intro');
-      
-      // Sembunyikan intro
+
       intro.style.display = 'none';
-      
-      // Tampilkan hantu fullscreen
       ghost.style.display = 'block';
-      
-      // Tambah efek flicker
       document.body.classList.add('flicker');
-      
-      // Coba mainkan suara jika sudah diizinkan
+
       if(audioAllowed) {
         scream.currentTime = 0;
         scream.play().catch(e => {
@@ -132,40 +122,30 @@
       } else {
         unmuteBtn.style.display = 'block';
       }
-      
-      // Hentikan efek setelah 3 detik
+
       setTimeout(() => {
         document.body.classList.remove('flicker');
       }, 3000);
-      
-      // Hanya sekali klik
+
       document.body.onclick = null;
     }
-    
-    // Event listener untuk tombol unmute
+
     unmuteBtn.addEventListener('click', () => {
       scream.play().then(() => {
         audioAllowed = true;
         unmuteBtn.style.display = 'none';
       });
     });
-    
-    // Untuk interaksi pertama
+
     document.body.addEventListener('click', function init() {
-      // Aktifkan audio context
       const context = new (window.AudioContext || window.webkitAudioContext)();
       const oscillator = context.createOscillator();
       oscillator.connect(context.destination);
       oscillator.start();
       oscillator.stop(context.currentTime + 0.001);
-      
-      // Minta izin audio
+
       enableAudio();
-      
-      // Set handler untuk klik berikutnya
       document.body.onclick = showGhost;
-      
-      // Hapus event listener ini
       document.body.removeEventListener('click', init);
     }, {once: true});
   </script>
