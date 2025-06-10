@@ -1,91 +1,117 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Claim Duit 1 Juta</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HANTU MUNCUL!</title>
   <style>
     body {
-      background-image: url('https://files.catbox.moe/0c2kht.jpg');
-      background-size: cover;
-      background-position: center;
-      height: 100vh;
       margin: 0;
-      font-family: sans-serif;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      padding: 0;
+      background-color: #000;
       cursor: pointer;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
     }
-
-    h1 {
-      font-size: 3em;
-      text-shadow: 2px 2px black;
+    
+    #intro {
+      padding: 20px;
+      z-index: 100;
     }
-
+    
     #hantu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: none;
-      margin-top: 30px;
-      max-width: 90%;
-      max-height: 60vh;
-      border: 5px solid red;
-      border-radius: 10px;
+      z-index: 99;
+      animation: shake 0.2s infinite;
     }
-
-    /* Animasi getar */
+    
     @keyframes shake {
-      0% { transform: translate(1px, 1px) rotate(0deg); }
-      10% { transform: translate(-1px, -2px) rotate(-1deg); }
-      20% { transform: translate(-3px, 0px) rotate(1deg); }
-      30% { transform: translate(3px, 2px) rotate(0deg); }
-      40% { transform: translate(1px, -1px) rotate(1deg); }
-      50% { transform: translate(-1px, 2px) rotate(-1deg); }
-      60% { transform: translate(-3px, 1px) rotate(0deg); }
-      70% { transform: translate(3px, 1px) rotate(-1deg); }
-      80% { transform: translate(-1px, -1px) rotate(1deg); }
-      90% { transform: translate(1px, 2px) rotate(0deg); }
-      100% { transform: translate(1px, -2px) rotate(-1deg); }
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(5px, 5px) rotate(2deg); }
+      50% { transform: translate(0, 0) rotate(0deg); }
+      75% { transform: translate(-5px, 5px) rotate(-2deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
-
-    .shake {
-      animation: shake 0.5s;
-      animation-iteration-count: infinite;
+    
+    .flicker {
+      animation: flicker 0.1s infinite alternate;
+    }
+    
+    @keyframes flicker {
+      0% { opacity: 1; }
+      50% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+    
+    .glow {
+      text-shadow: 0 0 10px red, 0 0 20px red;
     }
   </style>
 </head>
-<body onclick="mainkanSuaraDanGambar()">
-  <h1>Claim Duit 1 Juta</h1>
-
-  <img id="hantu" src="https://files.catbox.moe/whihb5.jpeg" alt="Hantu Seram">
-
-  <!-- Ganti dengan suara hantu yang lebih menakutkan -->
-  <audio id="suaraHantu">
+<body onclick="showGhost()">
+  <div id="intro">
+    <h1 class="glow">KLIK UNTUK CLAIM HADIAH 1 JUTA!</h1>
+    <p>Klik dimana saja untuk melanjutkan...</p>
+  </div>
+  
+  <img id="hantu" src="https://files.catbox.moe/whihb5.jpeg" alt="HANTU">
+  
+  <audio id="scream" preload="auto">
     <source src="https://assets.mixkit.co/sfx/preview/mixkit-scary-horror-laugh-532.mp3" type="audio/mpeg">
+    <source src="https://www.soundjay.com/human/sounds/scream-07.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    function mainkanSuaraDanGambar() {
-      const audio = document.getElementById('suaraHantu');
-      const gambar = document.getElementById('hantu');
+    function showGhost() {
+      const ghost = document.getElementById('hantu');
+      const scream = document.getElementById('scream');
+      const intro = document.getElementById('intro');
       
-      // Set volume ke maksimum (1)
-      audio.volume = 1.0;
-      audio.play();
+      // Sembunyikan intro
+      intro.style.display = 'none';
       
-      gambar.style.display = 'block';
-      // Tambahkan class shake untuk animasi getar
-      gambar.classList.add('shake');
-
-      // Hentikan animasi setelah 3 detik
+      // Tampilkan hantu fullscreen
+      ghost.style.display = 'block';
+      
+      // Tambah efek flicker
+      document.body.classList.add('flicker');
+      
+      // Mainkan suara dengan volume maksimal
+      scream.volume = 1.0;
+      scream.play().catch(e => {
+        // Jika autoplay diblokir, tampilkan alert
+        alert("Izinkan audio untuk pengalaman lebih menakutkan!");
+      });
+      
+      // Hentikan efek setelah 3 detik
       setTimeout(() => {
-        gambar.classList.remove('shake');
+        document.body.classList.remove('flicker');
       }, 3000);
-
-      // Hanya jalankan sekali
+      
+      // Hanya sekali klik
       document.body.onclick = null;
     }
+    
+    // Untuk mobile devices
+    document.addEventListener('touchstart', function() {
+      const context = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = context.createOscillator();
+      oscillator.connect(context.destination);
+      oscillator.start();
+      oscillator.stop(context.currentTime + 0.001);
+    }, {once: true});
   </script>
 </body>
 </html>
