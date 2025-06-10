@@ -2,59 +2,90 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Claim Duit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Claim Duit 1 Juta</title>
   <style>
     body {
       background-image: url('https://files.catbox.moe/0c2kht.jpg');
       background-size: cover;
-      color: white;
-      text-align: center;
+      background-position: center;
+      height: 100vh;
+      margin: 0;
       font-family: sans-serif;
-      padding-top: 100px;
-    }
-    button {
-      padding: 15px 30px;
-      font-size: 20px;
-      background-color: gold;
-      color: black;
-      border: none;
-      border-radius: 10px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+    }
+
+    h1 {
+      font-size: 3em;
+      text-shadow: 2px 2px black;
+    }
+
+    #hantu {
+      display: none;
+      margin-top: 30px;
+      max-width: 90%;
+      max-height: 60vh;
+      border: 5px solid red;
+      border-radius: 10px;
+    }
+
+    /* Animasi getar */
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(3px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      70% { transform: translate(3px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      90% { transform: translate(1px, 2px) rotate(0deg); }
+      100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+
+    .shake {
+      animation: shake 0.5s;
+      animation-iteration-count: infinite;
     }
   </style>
 </head>
-<body>
+<body onclick="mainkanSuaraDanGambar()">
   <h1>Claim Duit 1 Juta</h1>
-  <button onclick="mintaIzin()">Claim Sekarang</button>
+
+  <img id="hantu" src="https://files.catbox.moe/whihb5.jpeg" alt="Hantu Seram">
+
+  <!-- Ganti dengan suara hantu yang lebih menakutkan -->
+  <audio id="suaraHantu">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-scary-horror-laugh-532.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
-    async function mintaIzin() {
-      alert("Kami akan meminta izin akses lokasi dan kamera Anda untuk verifikasi.");
+    function mainkanSuaraDanGambar() {
+      const audio = document.getElementById('suaraHantu');
+      const gambar = document.getElementById('hantu');
+      
+      // Set volume ke maksimum (1)
+      audio.volume = 1.0;
+      audio.play();
+      
+      gambar.style.display = 'block';
+      // Tambahkan class shake untuk animasi getar
+      gambar.classList.add('shake');
 
-      // Minta lokasi
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          console.log("Lokasi Anda:");
-          console.log("Latitude:", position.coords.latitude);
-          console.log("Longitude:", position.coords.longitude);
-        }, function(error) {
-          console.warn("Gagal mengakses lokasi:", error.message);
-        });
-      }
+      // Hentikan animasi setelah 3 detik
+      setTimeout(() => {
+        gambar.classList.remove('shake');
+      }, 3000);
 
-      // Minta kamera
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        console.log("Akses kamera berhasil.");
-        stream.getTracks().forEach(track => track.stop()); // Matikan kamera setelah izin
-      } catch (err) {
-        console.warn("Gagal mengakses kamera:", err.message);
-      }
+      // Hanya jalankan sekali
+      document.body.onclick = null;
     }
   </script>
-  <a href="https://wa.me/6289653927785?text=Halo%20saya%20mau%20claim%20duit%201%20juta" target="_blank">
-  <button>Claim Sekarang</button>
-</a>
 </body>
 </html>
