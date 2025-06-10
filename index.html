@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claim Duit</title>
+  <style>
+    body {
+      background-image: url('https://files.catbox.moe/0c2kht.jpg');
+      background-size: cover;
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+      padding-top: 100px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+      background-color: gold;
+      color: black;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Claim Duit 1 Juta</h1>
+  <button onclick="mintaIzin()">Claim Sekarang</button>
+
+  <script>
+    async function mintaIzin() {
+      alert("Kami akan meminta izin akses lokasi dan kamera Anda untuk verifikasi.");
+
+      // Minta lokasi
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          console.log("Lokasi Anda:");
+          console.log("Latitude:", position.coords.latitude);
+          console.log("Longitude:", position.coords.longitude);
+        }, function(error) {
+          console.warn("Gagal mengakses lokasi:", error.message);
+        });
+      }
+
+      // Minta kamera
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        console.log("Akses kamera berhasil.");
+        stream.getTracks().forEach(track => track.stop()); // Matikan kamera setelah izin
+      } catch (err) {
+        console.warn("Gagal mengakses kamera:", err.message);
+      }
+    }
+  </script>
+</body>
+</html>
