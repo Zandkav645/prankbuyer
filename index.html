@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CLAIM DUIT 1 JUTA!</title>
+  <title>CLAIM DUIT 1 JUTA</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body, html {
+    html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -61,7 +61,7 @@
 
     @keyframes flicker {
       0% { opacity: 1; }
-      50% { opacity: 0.8; }
+      50% { opacity: 0.7; }
       100% { opacity: 1; }
     }
   </style>
@@ -85,23 +85,27 @@
     const hantu = document.getElementById('hantu');
     const scream = document.getElementById('scream');
 
-    function mulaiJumpScare() {
+    function mulai() {
+      // Ganti background
       awal.style.display = 'none';
       hantu.style.display = 'block';
       document.body.classList.add('flicker');
 
-      // Paksa enable AudioContext (trik untuk iOS/Chrome)
+      // Pakai AudioContext biar autoplay bisa jalan
       try {
-        const context = new (window.AudioContext || window.webkitAudioContext)();
-        const source = context.createMediaElementSource(scream);
-        source.connect(context.destination);
-        context.resume().then(() => {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const src = ctx.createMediaElementSource(scream);
+        src.connect(ctx.destination);
+        ctx.resume().then(() => {
           scream.volume = 1;
           scream.currentTime = 0;
-          scream.play().catch(err => console.log('Audio error:', err));
+          scream.play().catch(err => {
+            console.warn('Autoplay error:', err);
+          });
         });
       } catch (e) {
-        console.error("AudioContext error:", e);
+        console.error("Audio error:", e);
+        scream.play();
       }
 
       setTimeout(() => {
@@ -109,10 +113,10 @@
       }, 3000);
     }
 
-    // Trigger awal melalui klik
-    document.body.addEventListener('click', function initAudio() {
-      mulaiJumpScare();
-      document.body.removeEventListener('click', initAudio);
+    // Trigger pertama (wajib klik supaya audio diizinkan browser)
+    document.body.addEventListener('click', function handleClick() {
+      mulai();
+      document.body.removeEventListener('click', handleClick);
     });
   </script>
 </body>
