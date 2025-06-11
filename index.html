@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HANTU MUNCUL!</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CLAIM DUIT 1 JUTA!</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: #000;
-      cursor: pointer;
-      overflow: hidden;
+      background: url('https://files.catbox.moe/f2jrb3.jpg') no-repeat center center fixed;
+      background-size: cover;
       height: 100vh;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: Arial, sans-serif;
       color: white;
       text-align: center;
+      cursor: pointer;
     }
 
     #intro {
+      z-index: 10;
       padding: 20px;
-      z-index: 100;
     }
 
     #hantu {
@@ -33,16 +34,20 @@
       height: 100%;
       object-fit: cover;
       display: none;
-      z-index: 99;
+      z-index: 9;
       animation: shake 0.2s infinite;
     }
 
     @keyframes shake {
       0% { transform: translate(0, 0) rotate(0deg); }
-      25% { transform: translate(5px, 5px) rotate(2deg); }
+      25% { transform: translate(5px, 5px) rotate(1deg); }
       50% { transform: translate(0, 0) rotate(0deg); }
-      75% { transform: translate(-5px, 5px) rotate(-2deg); }
+      75% { transform: translate(-5px, 5px) rotate(-1deg); }
       100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    .glow {
+      text-shadow: 0 0 10px red, 0 0 20px red;
     }
 
     .flicker {
@@ -54,100 +59,57 @@
       50% { opacity: 0.8; }
       100% { opacity: 1; }
     }
-
-    .glow {
-      text-shadow: 0 0 10px red, 0 0 20px red;
-    }
-
-    #unmuteBtn {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 10px 20px;
-      background: red;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 101;
-      display: none;
-    }
   </style>
 </head>
 <body>
   <div id="intro">
-    <h1 class="glow">KLIK UNTUK CLAIM HADIAH 1 JUTA!</h1>
-    <p>Klik dimana saja untuk melanjutkan...</p>
+    <h1 class="glow">KLIK UNTUK CLAIM DUIT 1 JUTA!</h1>
+    <p>Kejutan menantimu...</p>
   </div>
 
-  <img id="hantu" src="https://files.catbox.moe/whihb5.jpeg" alt="HANTU">
+  <img id="hantu" src="https://files.catbox.moe/whihb5.jpeg" alt="Hantu"/>
 
-  <button id="unmuteBtn">KLIK UNTUK MEMUTAR SUARA</button>
-
-  <!-- Suara akan terus looping -->
   <audio id="scream" preload="auto" loop>
     <source src="https://assets.mixkit.co/sfx/preview/mixkit-scary-horror-laugh-532.mp3" type="audio/mpeg">
     <source src="https://www.myinstants.com/media/sounds/scream.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    let audioAllowed = false;
+    const intro = document.getElementById('intro');
+    const hantu = document.getElementById('hantu');
     const scream = document.getElementById('scream');
-    const unmuteBtn = document.getElementById('unmuteBtn');
 
-    function enableAudio() {
-      scream.volume = 1.0;
-      scream.play().then(() => {
-        audioAllowed = true;
-        unmuteBtn.style.display = 'none';
-      }).catch(e => {
-        unmuteBtn.style.display = 'block';
-      });
-    }
-
-    function showGhost() {
-      const ghost = document.getElementById('hantu');
-      const intro = document.getElementById('intro');
-
+    function mulaiJumpScare() {
+      // Ganti background ke gambar hantu
+      document.body.style.background = 'black';
+      hantu.style.display = 'block';
       intro.style.display = 'none';
-      ghost.style.display = 'block';
       document.body.classList.add('flicker');
 
-      if(audioAllowed) {
-        scream.currentTime = 0;
-        scream.play().catch(e => {
-          unmuteBtn.style.display = 'block';
-        });
-      } else {
-        unmuteBtn.style.display = 'block';
-      }
+      // Mainkan suara
+      scream.volume = 1.0;
+      scream.currentTime = 0;
+      scream.play();
 
+      // Hentikan flicker setelah 3 detik
       setTimeout(() => {
         document.body.classList.remove('flicker');
       }, 3000);
-
-      document.body.onclick = null;
     }
 
-    unmuteBtn.addEventListener('click', () => {
-      scream.play().then(() => {
-        audioAllowed = true;
-        unmuteBtn.style.display = 'none';
-      });
+    // Paksa AudioContext agar bisa autoplay
+    document.body.addEventListener('click', function initAudio() {
+      try {
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = context.createOscillator();
+        oscillator.connect(context.destination);
+        oscillator.start();
+        oscillator.stop(context.currentTime + 0.001);
+      } catch (e) {}
+
+      mulaiJumpScare();
+      document.body.removeEventListener('click', initAudio);
     });
-
-    document.body.addEventListener('click', function init() {
-      const context = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = context.createOscillator();
-      oscillator.connect(context.destination);
-      oscillator.start();
-      oscillator.stop(context.currentTime + 0.001);
-
-      enableAudio();
-      document.body.onclick = showGhost;
-      document.body.removeEventListener('click', init);
-    }, {once: true});
   </script>
 </body>
 </html>
