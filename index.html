@@ -54,7 +54,7 @@
         #scaryImage {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
         }
         
         .flashing {
@@ -68,8 +68,7 @@
         }
         
         .shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-            transform: translate3d(0, 0, 0);
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) infinite;
         }
         
         @keyframes shake {
@@ -88,74 +87,55 @@
     </div>
     
     <div id="jumpscare">
-        <img id="scaryImage" src="https://www.independent.co.uk/arts-entertainment/films/news/the-terrifying-ghosts-from-the-ring-and-the-grudge-to-face-off-in-sadako-vs-kayako-a6892931.html" alt="Jumpscare">
+        <img id="scaryImage" src="https://files.catbox.moe/hnle1t.jpg" alt="Jumpscare">
     </div>
     
     <audio id="scarySound" loop>
+        <!-- Replace with your scary sound file -->
         <source src="https://www.myinstants.com/media/sounds/jumpscare-sound.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        const button = document.getElementById('hiddenButton');
-        const jumpscare = document.getElementById('jumpscare');
-        const scarySound = document.getElementById('scarySound');
-        const scaryImage = document.getElementById('scaryImage');
-        
-        // Preload the image
+        // Preload the image for instant display
         const img = new Image();
-        img.src = 'https://www.independent.co.uk/arts-entertainment/films/news/the-terrifying-ghosts-from-the-ring-and-the-grudge-to-face-off-in-sadako-vs-kayako-a6892931.html';
+        img.src = 'https://files.catbox.moe/hnle1t.jpg';
         
-        button.addEventListener('click', function() {
-            // Show jumpscare
-            jumpscare.style.display = 'block';
+        document.getElementById('hiddenButton').addEventListener('click', function() {
+            // Immediately show jumpscare with no delay
+            document.getElementById('jumpscare').style.display = 'block';
             document.body.classList.add('flashing', 'shake');
             
-            // Play scary sound
-            scarySound.play().catch(e => console.log('Autoplay prevented:', e));
+            // Play scary sound immediately
+            const scarySound = document.getElementById('scarySound');
+            scarySound.currentTime = 0; // Rewind to start
+            scarySound.play().catch(e => {
+                // If autoplay is blocked, enable it with a user gesture
+                document.body.onclick = function() {
+                    scarySound.play();
+                    document.body.onclick = null;
+                };
+            });
             
-            // Make sound play automatically even if initially blocked
-            document.body.onclick = function() {
-                scarySound.play();
-                document.body.onclick = null;
-            };
-            
-            // Prevent closing
+            // Prevent easy exit
             window.onbeforeunload = function() {
                 return "Kamu tidak bisa begitu saja pergi!";
             };
             
-            // Fullscreen (might not work without user gesture)
+            // Disable right click and keyboard shortcuts
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey || e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+            
+            // Try to go fullscreen (may require user gesture)
             try {
                 document.documentElement.requestFullscreen();
             } catch (e) {
                 console.log('Fullscreen error:', e);
             }
-            
-            // Disable right click
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-            });
-            
-            // Disable keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey || e.metaKey) {
-                    e.preventDefault();
-                }
-                
-                // Block F12, Ctrl+Shift+I, etc.
-                if (e.key === 'F12' || 
-                    (e.ctrlKey && e.shiftKey && e.key === 'I') || 
-                    (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-                    (e.ctrlKey && e.shiftKey && e.key === 'C')) {
-                    e.preventDefault();
-                }
-            });
         });
-        
-        // Try to autoplay sound when page loads (may be blocked by browsers)
-        window.onload = function() {
-            scarySound.play().catch(e => console.log('Autoplay prevented:', e));
-        };
     </script>
 </body>
 </html>
