@@ -1,123 +1,161 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CLAIM DUIT 1 JUTA</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-      cursor: pointer;
-    }
-
-    #awal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: url('https://files.catbox.moe/f2jrb3.jpg') no-repeat center center;
-      background-size: cover;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1;
-    }
-
-    #intro {
-      color: white;
-      text-align: center;
-      text-shadow: 0 0 10px black;
-    }
-
-    .glow {
-      text-shadow: 0 0 10px red, 0 0 20px red;
-    }
-
-    #hantu {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: none;
-      z-index: 2;
-      animation: shake 0.2s infinite;
-    }
-
-    @keyframes shake {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      25% { transform: translate(5px, 5px) rotate(1deg); }
-      50% { transform: translate(0, 0) rotate(0deg); }
-      75% { transform: translate(-5px, 5px) rotate(-1deg); }
-      100% { transform: translate(0, 0) rotate(0deg); }
-    }
-
-    .flicker {
-      animation: flicker 0.1s infinite alternate;
-    }
-
-    @keyframes flicker {
-      0% { opacity: 1; }
-      50% { opacity: 0.7; }
-      100% { opacity: 1; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Misterius</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>👻</text></svg>"), auto;
+            overflow: hidden;
+        }
+        
+        #content {
+            padding: 20px;
+        }
+        
+        #hiddenButton {
+            background-color: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #hiddenButton:hover {
+            background-color: #0f0;
+            color: #000;
+        }
+        
+        #jumpscare {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            display: none;
+            z-index: 1000;
+        }
+        
+        #scaryImage {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .flashing {
+            animation: flash 0.2s infinite;
+        }
+        
+        @keyframes flash {
+            0% { background-color: #000; }
+            50% { background-color: #f00; }
+            100% { background-color: #000; }
+        }
+        
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            transform: translate3d(0, 0, 0);
+        }
+        
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+    </style>
 </head>
 <body>
-  <div id="awal">
-    <div id="intro">
-      <h1 class="glow">KLIK UNTUK CLAIM DUIT 1 JUTA!</h1>
-      <p>Kejutan menantimu...</p>
+    <div id="content">
+        <h1>Selamat Datang di Dunia Kegelapan</h1>
+        <p>Jangan tekan tombol di bawah ini kecuali kamu berani...</p>
+        <button id="hiddenButton">WOI TEKAN INI</button>
     </div>
-  </div>
+    
+    <div id="jumpscare">
+        <img id="scaryImage" src="https://www.independent.co.uk/arts-entertainment/films/news/the-terrifying-ghosts-from-the-ring-and-the-grudge-to-face-off-in-sadako-vs-kayako-a6892931.html" alt="Jumpscare">
+    </div>
+    
+    <audio id="scarySound" loop>
+        <source src="https://www.myinstants.com/media/sounds/jumpscare-sound.mp3" type="audio/mpeg">
+    </audio>
 
-  <img id="hantu" src="https://files.catbox.moe/whihb5.jpeg" alt="Hantu"/>
-
-  <audio id="scream" preload="auto">
-    <source src="https://assets.mixkit.co/sfx/preview/mixkit-scary-horror-laugh-532.mp3" type="audio/mpeg">
-  </audio>
-
-  <script>
-    const awal = document.getElementById('awal');
-    const hantu = document.getElementById('hantu');
-    const scream = document.getElementById('scream');
-
-    function mulai() {
-      // Ganti background
-      awal.style.display = 'none';
-      hantu.style.display = 'block';
-      document.body.classList.add('flicker');
-
-      // Pakai AudioContext biar autoplay bisa jalan
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const src = ctx.createMediaElementSource(scream);
-        src.connect(ctx.destination);
-        ctx.resume().then(() => {
-          scream.volume = 1;
-          scream.currentTime = 0;
-          scream.play().catch(err => {
-            console.warn('Autoplay error:', err);
-          });
+    <script>
+        const button = document.getElementById('hiddenButton');
+        const jumpscare = document.getElementById('jumpscare');
+        const scarySound = document.getElementById('scarySound');
+        const scaryImage = document.getElementById('scaryImage');
+        
+        // Preload the image
+        const img = new Image();
+        img.src = 'https://www.independent.co.uk/arts-entertainment/films/news/the-terrifying-ghosts-from-the-ring-and-the-grudge-to-face-off-in-sadako-vs-kayako-a6892931.html';
+        
+        button.addEventListener('click', function() {
+            // Show jumpscare
+            jumpscare.style.display = 'block';
+            document.body.classList.add('flashing', 'shake');
+            
+            // Play scary sound
+            scarySound.play().catch(e => console.log('Autoplay prevented:', e));
+            
+            // Make sound play automatically even if initially blocked
+            document.body.onclick = function() {
+                scarySound.play();
+                document.body.onclick = null;
+            };
+            
+            // Prevent closing
+            window.onbeforeunload = function() {
+                return "Kamu tidak bisa begitu saja pergi!";
+            };
+            
+            // Fullscreen (might not work without user gesture)
+            try {
+                document.documentElement.requestFullscreen();
+            } catch (e) {
+                console.log('Fullscreen error:', e);
+            }
+            
+            // Disable right click
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+            
+            // Disable keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                }
+                
+                // Block F12, Ctrl+Shift+I, etc.
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'C')) {
+                    e.preventDefault();
+                }
+            });
         });
-      } catch (e) {
-        console.error("Audio error:", e);
-        scream.play();
-      }
-
-      setTimeout(() => {
-        document.body.classList.remove('flicker');
-      }, 3000);
-    }
-
-    // Trigger pertama (wajib klik supaya audio diizinkan browser)
-    document.body.addEventListener('click', function handleClick() {
-      mulai();
-      document.body.removeEventListener('click', handleClick);
-    });
-  </script>
+        
+        // Try to autoplay sound when page loads (may be blocked by browsers)
+        window.onload = function() {
+            scarySound.play().catch(e => console.log('Autoplay prevented:', e));
+        };
+    </script>
 </body>
 </html>
