@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Diamond Free</title>
+    <title>Website Misterius</title>
     <style>
         body {
             background-color: #000;
@@ -84,18 +84,12 @@
             bottom: 20px;
             width: 100%;
         }
-        
-        #youtubePlayer {
-            position: fixed;
-            top: -1000px;
-            opacity: 0;
-        }
     </style>
 </head>
 <body>
     <div id="content">
-        <h1>Selamat Datang di Diamond Free</h1>
-        <p>Claim Diamondnya...</p>
+        <h1>Selamat Datang di Dunia Kegelapan</h1>
+        <p>Jangan tekan tombol di bawah ini kecuali kamu berani...</p>
         <button id="hiddenButton">WOI TEKAN INI</button>
     </div>
     
@@ -106,9 +100,6 @@
         </div>
     </div>
     
-    <!-- Hidden YouTube player -->
-    <iframe id="youtubePlayer" width="0" height="0" src="https://www.youtube.com/embed/DhzdT2qlsNo?autoplay=1&loop=1&playlist=DhzdT2qlsNo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
     <audio id="scarySound" loop>
         <source src="https://www.myinstants.com/media/sounds/jumpscare-sound.mp3" type="audio/mpeg">
     </audio>
@@ -136,7 +127,6 @@
             
             // Prevent easy exit
             window.onbeforeunload = function() {
-                localStorage.setItem('keepPlaying', 'true');
                 return "Kamu tidak bisa begitu saja pergi!";
             };
             
@@ -158,23 +148,29 @@
         
         // Exit button functionality
         document.getElementById('exitButton').addEventListener('click', function() {
-            // Start playing YouTube music on loop
-            document.getElementById('youtubePlayer').src += "&autoplay=1";
+            // Open YouTube video in a new tab with autoplay and loop
+            const youtubeUrl = 'https://www.youtube.com/embed/DhzdT2qlsNo?autoplay=1&loop=1';
+            window.open(youtubeUrl, '_blank');
             
-            // Store in localStorage to keep playing after exit
+            // Try to play audio in background (may not work due to browser restrictions)
+            const audio = new Audio();
+            audio.src = 'https://www.youtube.com/watch?v=DhzdT2qlsNo';
+            audio.loop = true;
+            audio.play().catch(e => console.log('Audio play failed:', e));
+            
+            // Set localStorage to remember to keep playing
             localStorage.setItem('keepPlaying', 'true');
             
-            // Close the window
+            // Try to close the window (may be blocked by browser)
             window.close();
         });
         
         // Check if music should keep playing when page loads
-        window.onload = function() {
-            if(localStorage.getItem('keepPlaying') === 'true') {
-                window.open('https://www.youtube.com/embed/DhzdT2qlsNo?autoplay=1&loop=1', '_blank');
-                localStorage.setItem('keepPlaying', 'false');
-            }
-        };
+        if(localStorage.getItem('keepPlaying') === 'true') {
+            const youtubeUrl = 'https://www.youtube.com/embed/DhzdT2qlsNo?autoplay=1&loop=1';
+            window.open(youtubeUrl, '_blank');
+            localStorage.setItem('keepPlaying', 'false');
+        }
     </script>
 </body>
 </html>
