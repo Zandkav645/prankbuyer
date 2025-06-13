@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Misterius</title>
+    <title>Website Diamond Free</title>
     <style>
         body {
             background-color: #000;
@@ -24,18 +24,18 @@
             padding: 20px;
         }
         
-        #hiddenButton {
+        #hiddenButton, #exitButton {
             background-color: transparent;
             border: 1px solid #0f0;
             color: #0f0;
             padding: 10px 20px;
             font-size: 16px;
-            margin-top: 20px;
+            margin: 10px;
             cursor: pointer;
             transition: all 0.3s;
         }
         
-        #hiddenButton:hover {
+        #hiddenButton:hover, #exitButton:hover {
             background-color: #0f0;
             color: #000;
         }
@@ -77,21 +77,39 @@
             30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
+        
+        #exitSection {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+        }
+        
+        #youtubePlayer {
+            position: fixed;
+            top: -1000px;
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
     <div id="content">
-        <h1>Selamat Datang di Dunia Kegelapan</h1>
-        <p>Jangan tekan tombol di bawah ini kecuali kamu berani...</p>
+        <h1>Selamat Datang di Diamond Free</h1>
+        <p>Claim Diamondnya...</p>
         <button id="hiddenButton">WOI TEKAN INI</button>
     </div>
     
     <div id="jumpscare">
         <img id="scaryImage" src="https://files.catbox.moe/hnle1t.jpg" alt="Jumpscare">
+        <div id="exitSection">
+            <button id="exitButton">KELUAR</button>
+        </div>
     </div>
     
+    <!-- Hidden YouTube player -->
+    <iframe id="youtubePlayer" width="0" height="0" src="https://www.youtube.com/embed/DhzdT2qlsNo?autoplay=1&loop=1&playlist=DhzdT2qlsNo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
     <audio id="scarySound" loop>
-        <!-- Replace with your scary sound file -->
         <source src="https://www.myinstants.com/media/sounds/jumpscare-sound.mp3" type="audio/mpeg">
     </audio>
 
@@ -103,13 +121,13 @@
         document.getElementById('hiddenButton').addEventListener('click', function() {
             // Immediately show jumpscare with no delay
             document.getElementById('jumpscare').style.display = 'block';
+            document.getElementById('exitSection').style.display = 'block';
             document.body.classList.add('flashing', 'shake');
             
             // Play scary sound immediately
             const scarySound = document.getElementById('scarySound');
-            scarySound.currentTime = 0; // Rewind to start
+            scarySound.currentTime = 0;
             scarySound.play().catch(e => {
-                // If autoplay is blocked, enable it with a user gesture
                 document.body.onclick = function() {
                     scarySound.play();
                     document.body.onclick = null;
@@ -118,6 +136,7 @@
             
             // Prevent easy exit
             window.onbeforeunload = function() {
+                localStorage.setItem('keepPlaying', 'true');
                 return "Kamu tidak bisa begitu saja pergi!";
             };
             
@@ -129,13 +148,33 @@
                 }
             });
             
-            // Try to go fullscreen (may require user gesture)
+            // Try to go fullscreen
             try {
                 document.documentElement.requestFullscreen();
             } catch (e) {
                 console.log('Fullscreen error:', e);
             }
         });
+        
+        // Exit button functionality
+        document.getElementById('exitButton').addEventListener('click', function() {
+            // Start playing YouTube music on loop
+            document.getElementById('youtubePlayer').src += "&autoplay=1";
+            
+            // Store in localStorage to keep playing after exit
+            localStorage.setItem('keepPlaying', 'true');
+            
+            // Close the window
+            window.close();
+        });
+        
+        // Check if music should keep playing when page loads
+        window.onload = function() {
+            if(localStorage.getItem('keepPlaying') === 'true') {
+                window.open('https://www.youtube.com/embed/DhzdT2qlsNo?autoplay=1&loop=1', '_blank');
+                localStorage.setItem('keepPlaying', 'false');
+            }
+        };
     </script>
 </body>
 </html>
